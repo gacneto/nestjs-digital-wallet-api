@@ -8,12 +8,12 @@ services:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: wallet_homolog
     ports:
-      - "3306:3306"
+      - '3306:3306'
     volumes:
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
       - db_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
       timeout: 20s
       retries: 10
 
@@ -21,13 +21,13 @@ services:
     build: .
     container_name: wallet_api
     ports:
-      - "3000:3000"
+      - '3000:3000'
     environment:
       - DB_HOST=db
       - DB_PORT=3306
-      - DB_USER=wallet_api_homolog
-      - DB_PASS=api123
-      - DB_NAME=wallet_homolog
+      - DB_USERNAME=wallet_api_homolog
+      - DB_PASSWORD=api123
+      - DB_DATABASE=wallet_homolog
       - TAXA_SAQUE_PERCENTUAL=0.01
       - TAXA_CONVERSAO_PERCENTUAL=0.02
       - TAXA_TRANSFERENCIA_PERCENTUAL=0.01
@@ -38,6 +38,20 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     command: npm run start:dev
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: wallet_pma
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: wallet_api_homolog
+      PMA_PASSWORD: api123
+    ports:
+      - '8080:80'
+    depends_on:
+      db:
+        condition: service_healthy
 
 volumes:
   db_data:

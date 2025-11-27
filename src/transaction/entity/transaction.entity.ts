@@ -26,10 +26,10 @@ export class Transaction {
 
   @ApiProperty({ example: 'DEPOSITO', description: 'Transaction type' })
   @Column({ name: 'tipo' })
-  type: string; // 'DEPOSITO' or 'SAQUE'
+  type: string;
 
   @ApiProperty({ example: 100.5, description: 'Transaction amount' })
-  @Column({ type: 'decimal', precision: 20, scale: 8 })
+  @Column({ name: 'valor', type: 'decimal', precision: 20, scale: 8 })
   valor: number;
 
   @ApiProperty({ example: 0.5, description: 'Transaction fee' })

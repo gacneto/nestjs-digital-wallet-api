@@ -1,9 +1,11 @@
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(new ValidationPipe());
 
   const config = new DocumentBuilder()
     .setTitle('Digital Wallet API')
@@ -18,5 +20,6 @@ async function bootstrap() {
 
   console.log(`Application is running on: http://localhost:${port}`);
   console.log(`Swagger is running on: http://localhost:${port}/docs`);
+  console.log(`phpMyAdmin is running on: http://localhost:8080`);
 }
 bootstrap();

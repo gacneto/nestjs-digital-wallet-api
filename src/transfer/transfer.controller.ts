@@ -4,28 +4,31 @@ import { TransferService } from './transfer.service';
 import { CreateTransferDto } from './dto/create-transfer.dto';
 import { Transfer } from './entity/transfer.entity';
 
-@ApiTags('Transfers')
+@ApiTags('transferencias')
 @Controller('carteiras')
 export class TransferController {
   constructor(private readonly transferService: TransferService) {}
 
   @Post(':endereco_origem/transferencias')
-  @ApiOperation({ summary: 'Transfer funds' })
+  @ApiOperation({ summary: 'Realizar transferência' })
   @ApiResponse({
     status: 201,
-    description: 'Transfer successful',
+    description: 'Transferência realizada com sucesso',
     type: Transfer,
   })
   @ApiResponse({
     status: 400,
-    description: 'Insufficient funds or invalid data',
+    description: 'Saldo insuficiente ou dados inválidos',
   })
-  @ApiResponse({ status: 401, description: 'Invalid private key' })
-  @ApiResponse({ status: 404, description: 'Wallet not found' })
-  async transfer(
+  @ApiResponse({ status: 401, description: 'Chave privada inválida' })
+  @ApiResponse({ status: 404, description: 'Carteira não encontrada' })
+  async realizarTransferencia(
     @Param('endereco_origem') sourceAddress: string,
     @Body() createTransferDto: CreateTransferDto,
   ): Promise<Transfer> {
-    return this.transferService.transfer(sourceAddress, createTransferDto);
+    return this.transferService.realizarTransferencia(
+      sourceAddress,
+      createTransferDto,
+    );
   }
 }

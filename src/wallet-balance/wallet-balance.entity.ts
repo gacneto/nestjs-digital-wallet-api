@@ -24,7 +24,13 @@ export class WalletBalance {
   currencyCode: string;
 
   @ApiProperty({ example: 100.5, description: 'Balance amount' })
-  @Column({ type: 'decimal', precision: 20, scale: 8, default: 0 })
+  @Column({
+    name: 'saldo',
+    type: 'decimal',
+    precision: 20,
+    scale: 8,
+    default: 0,
+  })
   balance: number;
 
   @ManyToOne(() => Wallet)

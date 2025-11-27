@@ -19,6 +19,6 @@ export class Wallet {
   createdAt: Date;
 
   @ApiProperty({ example: 'active', description: 'Wallet status' })
-  @Column({ default: 'active' })
+  @Column({ name: 'status', default: 'active' })
   status: string;
 }

@@ -26,7 +26,7 @@ export class TransferService {
     private dataSource: DataSource,
   ) {}
 
-  async transfer(
+  async realizarTransferencia(
     sourceAddress: string,
     createTransferDto: CreateTransferDto,
   ): Promise<Transfer> {

@@ -3,8 +3,12 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import { Wallet } from '../../wallet/entity/wallet.entity';
+import { Currency } from '../../currency/currency.entity';
 
 @Entity('CONVERSAO')
 export class Conversion {
@@ -42,4 +46,16 @@ export class Conversion {
   })
   @CreateDateColumn({ name: 'data_operacao' })
   operationDate: Date;
+
+  @ManyToOne(() => Wallet)
+  @JoinColumn({ name: 'carteira_endereco' })
+  wallet: Wallet;
+
+  @ManyToOne(() => Currency)
+  @JoinColumn({ name: 'moeda_origem' })
+  sourceCurrencyEntity: Currency;
+
+  @ManyToOne(() => Currency)
+  @JoinColumn({ name: 'moeda_destino' })
+  targetCurrencyEntity: Currency;
 }

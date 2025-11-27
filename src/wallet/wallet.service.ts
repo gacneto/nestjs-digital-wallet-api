@@ -20,9 +20,12 @@ export class WalletService {
     private currencyRepository: Repository<Currency>,
   ) {}
 
-  async create(createWalletDto: CreateWalletDto): Promise<WalletResponseDto> {
+  async criarCarteira(
+    createWalletDto: CreateWalletDto,
+  ): Promise<WalletResponseDto> {
     const address = '0x' + crypto.randomBytes(20).toString('hex');
-    const privateKey = crypto.randomBytes(32).toString('hex');
+    const privateKey =
+      createWalletDto.privateKey || crypto.randomBytes(32).toString('hex');
     const privateKeyHash = await bcrypt.hash(privateKey, 10);
 
     const wallet = this.walletRepository.create({
@@ -49,7 +52,7 @@ export class WalletService {
     };
   }
 
-  async getBalance(address: string): Promise<WalletBalance[]> {
+  async consultarSaldo(address: string): Promise<WalletBalance[]> {
     const wallet = await this.walletRepository.findOne({ where: { address } });
     if (!wallet) {
       throw new NotFoundException('Wallet not found');
@@ -61,7 +64,7 @@ export class WalletService {
     });
   }
 
-  async getWallet(address: string): Promise<Wallet> {
+  async consultarCarteira(address: string): Promise<Wallet> {
     const wallet = await this.walletRepository.findOne({ where: { address } });
     if (!wallet) {
       throw new NotFoundException('Wallet not found');

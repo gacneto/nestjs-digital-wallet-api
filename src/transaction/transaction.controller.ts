@@ -10,22 +10,22 @@ export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
   @Post(':endereco/depositos')
-  @ApiOperation({ summary: 'Make a deposit' })
-  @ApiResponse({ status: 201, description: 'Deposit successful' })
-  deposit(
+  @ApiOperation({ summary: 'Realizar depósito' })
+  @ApiResponse({ status: 201, description: 'Depósito realizado com sucesso' })
+  realizarDeposito(
     @Param('endereco') address: string,
     @Body() createDepositDto: CreateDepositDto,
   ) {
-    return this.transactionService.deposit(address, createDepositDto);
+    return this.transactionService.realizarDeposito(address, createDepositDto);
   }
 
   @Post(':endereco/saques')
-  @ApiOperation({ summary: 'Make a withdrawal' })
-  @ApiResponse({ status: 201, description: 'Withdrawal successful' })
-  withdraw(
+  @ApiOperation({ summary: 'Realizar saque' })
+  @ApiResponse({ status: 201, description: 'Saque realizado com sucesso' })
+  realizarSaque(
     @Param('endereco') address: string,
     @Body() createWithdrawDto: CreateWithdrawDto,
   ) {
-    return this.transactionService.withdraw(address, createWithdrawDto);
+    return this.transactionService.realizarSaque(address, createWithdrawDto);
   }
 }

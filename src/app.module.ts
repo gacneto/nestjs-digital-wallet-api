@@ -22,7 +22,7 @@ import { TransferModule } from './transfer/transfer.module';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: false, // DDL is handled by init.sql
+      synchronize: false,
     }),
     WalletModule,
     WalletBalanceModule,

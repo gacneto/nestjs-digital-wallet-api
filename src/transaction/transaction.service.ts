@@ -30,7 +30,7 @@ export class TransactionService {
     private configService: ConfigService,
   ) {}
 
-  async deposit(address: string, createDepositDto: CreateDepositDto) {
+  async realizarDeposito(address: string, createDepositDto: CreateDepositDto) {
     const { currency: currencyCode, amount } = createDepositDto;
 
     const wallet = await this.walletRepository.findOne({ where: { address } });
@@ -87,7 +87,7 @@ export class TransactionService {
     }
   }
 
-  async withdraw(address: string, createWithdrawDto: CreateWithdrawDto) {
+  async realizarSaque(address: string, createWithdrawDto: CreateWithdrawDto) {
     const { currency: currencyCode, amount, privateKey } = createWithdrawDto;
 
     const wallet = await this.walletRepository.findOne({ where: { address } });
@@ -96,8 +96,16 @@ export class TransactionService {
     }
 
     // Validate private key
-    const isKeyValid = await bcrypt.compare(privateKey, wallet.privateKeyHash);
+    // Normalize input: remove whitespace and convert to lowercase (as hashes are usually from lowercase hex)
+    const normalizedKey = privateKey.trim().toLowerCase();
+    const isKeyValid = await bcrypt.compare(
+      normalizedKey,
+      wallet.privateKeyHash,
+    );
     if (!isKeyValid) {
+      console.log(
+        `Withdrawal failed: Invalid private key for wallet ${address}`,
+      );
       throw new UnauthorizedException('Invalid private key');
     }
 

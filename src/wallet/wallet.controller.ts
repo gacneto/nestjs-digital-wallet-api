@@ -10,27 +10,30 @@ export class WalletController {
   constructor(private readonly walletService: WalletService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create a new wallet' })
+  @ApiOperation({ summary: 'Criar nova carteira' })
   @ApiResponse({
     status: 201,
-    description: 'Wallet created',
+    description: 'Carteira criada com sucesso',
     type: WalletResponseDto,
   })
-  create(@Body() createWalletDto: CreateWalletDto) {
-    return this.walletService.create(createWalletDto);
+  criarCarteira(@Body() createWalletDto: CreateWalletDto) {
+    return this.walletService.criarCarteira(createWalletDto);
   }
 
   @Get(':endereco')
-  @ApiOperation({ summary: 'Get wallet details' })
-  @ApiResponse({ status: 200, description: 'Wallet details' })
-  getWallet(@Param('endereco') address: string) {
-    return this.walletService.getWallet(address);
+  @ApiOperation({ summary: 'Consultar detalhes da carteira' })
+  @ApiResponse({
+    status: 200,
+    description: 'Detalhes da carteira retornados com sucesso',
+  })
+  consultarCarteira(@Param('endereco') address: string) {
+    return this.walletService.consultarCarteira(address);
   }
 
   @Get(':endereco/saldos')
-  @ApiOperation({ summary: 'Get wallet balances' })
-  @ApiResponse({ status: 200, description: 'Wallet balances' })
-  getBalance(@Param('endereco') address: string) {
-    return this.walletService.getBalance(address);
+  @ApiOperation({ summary: 'Consultar saldos da carteira' })
+  @ApiResponse({ status: 200, description: 'Saldos retornados com sucesso' })
+  consultarSaldo(@Param('endereco') address: string) {
+    return this.walletService.consultarSaldo(address);
   }
 }

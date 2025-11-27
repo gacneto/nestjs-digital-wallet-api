@@ -16,5 +16,5 @@ export class Currency {
     description: 'Currency type (CRYPTO or FIAT)',
   })
   @Column({ name: 'tipo' })
-  type: string; // 'CRYPTO' or 'FIAT'
+  type: string;
 }
