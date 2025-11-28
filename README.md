@@ -1,98 +1,140 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Digital Wallet API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API robusta para gerenciamento de carteiras digitais e transações financeiras, desenvolvida com NestJS.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🛠 Tech Stack
 
-## Description
+O projeto utiliza as seguintes tecnologias e ferramentas:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- **Framework**: [NestJS](https://nestjs.com/) (Node.js)
+- **Linguagem**: TypeScript
+- **Banco de Dados**: MySQL 8.0
+- **ORM**: TypeORM
+- **Containerização**: Docker & Docker Compose
+- **Documentação**: Swagger (OpenAPI)
+- **Validação**: class-validator & class-transformer
 
-## Project setup
+## 📋 Pré-requisitos
 
-```bash
-$ npm install
-```
+Antes de começar, certifique-se de ter instalado em sua máquina:
 
-## Compile and run the project
+- [Node.js](https://nodejs.org/) (versão 18 ou superior recomendada)
+- [npm](https://www.npmjs.com/) (geralmente vem com o Node.js)
+- [Docker](https://www.docker.com/) & Docker Compose (Recomendado para rodar o ambiente completo facilmente)
+
+## 🚀 Instalação e Configuração
+
+### 1. Clone o repositório
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+git clone <url-do-repositorio>
+cd api-digital-wallet
 ```
 
-## Run tests
+### 2. Configuração de Variáveis de Ambiente (.env)
+
+O projeto necessita de um arquivo `.env` na raiz para definir as configurações sensíveis e de conexão. Um arquivo de exemplo `.env.example` é fornecido.
+
+Crie o arquivo `.env` copiando o exemplo:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+cp .env.example .env
 ```
 
-## Deployment
+**Variáveis Importantes:**
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+| Variável      | Descrição               | Valor Padrão (Exemplo)               |
+| ------------- | ----------------------- | ------------------------------------ |
+| `DB_HOST`     | Host do banco de dados  | `localhost` (local) ou `db` (docker) |
+| `DB_PORT`     | Porta do banco de dados | `3306`                               |
+| `DB_USERNAME` | Usuário do banco        | `wallet_api_homolog`                 |
+| `DB_PASSWORD` | Senha do banco          | `api123`                             |
+| `DB_DATABASE` | Nome do banco           | `wallet_homolog`                     |
+| `PORT`        | Porta da API            | `3000`                               |
+| `TAXA_...`    | Taxas de transação      | (Verificar no .env)                  |
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+> **Nota:** Se você for rodar via **Docker**, o `DB_HOST` deve ser `db`. Se for rodar **localmente** (npm run start), deve ser `localhost`.
+
+---
+
+## 🏃‍♂️ Como Rodar o Projeto
+
+### Opção A: Usando Docker (Recomendada)
+
+Esta é a forma mais simples, pois sobe o banco de dados (MySQL), a API e o phpMyAdmin automaticamente.
+
+1. Certifique-se que o Docker está rodando.
+2. Execute o comando:
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+docker-compose up --build
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+- A API estará disponível em: `http://localhost:3000`
+- O Swagger (Documentação) em: `http://localhost:3000/docs`
+- O phpMyAdmin (Gerenciador de DB) em: `http://localhost:8080`
 
-## Resources
+### Opção B: Rodando Localmente (Sem Docker para a API)
 
-Check out a few resources that may come in handy when working with NestJS:
+Se preferir rodar a API diretamente no seu Node.js local:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+1. **Suba o Banco de Dados**: Você ainda precisará de um banco MySQL. Você pode usar o Docker apenas para o banco:
+   ```bash
+   docker-compose up -d db phpmyadmin
+   ```
+2. **Instale as dependências**:
+   ```bash
+   npm install
+   ```
+3. **Inicie a aplicação**:
 
-## Support
+   ```bash
+   # Desenvolvimento
+   npm run start:dev
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+   # Produção
+   npm run start:prod
+   ```
 
-## Stay in touch
+---
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## 📚 Documentação da API (Swagger)
 
-## License
+A documentação interativa dos endpoints está disponível através do Swagger UI.
+Após iniciar a aplicação, acesse:
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+👉 **[http://localhost:3000/docs](http://localhost:3000/docs)**
+
+---
+
+## ⚠️ Troubleshooting (Problemas Comuns)
+
+### 1. Erro: `Port 3306 is already in use`
+
+Isso significa que você já tem um MySQL rodando na sua máquina (talvez instalado nativamente ou outro container).
+**Solução:**
+
+- Pare o serviço MySQL local (`sudo service mysql stop` ou equivalente).
+- OU altere a porta externa no `docker-compose.yml` (ex: `'3307:3306'`) e atualize o `DB_PORT` no `.env`.
+
+### 2. Erro: `Port 3000 is already in use`
+
+Outra aplicação está usando a porta 3000.
+**Solução:**
+
+- Identifique e pare o processo que está usando a porta.
+- OU mude a `PORT` no arquivo `.env` para outro valor (ex: 3001).
+
+### 3. Erro de Conexão com o Banco (ECONNREFUSED)
+
+- Verifique se o container do banco (`wallet_db`) está rodando (`docker ps`).
+- Verifique se as credenciais no `.env` batem com as do `docker-compose.yml`.
+- Se rodando localmente, garanta que `DB_HOST=localhost`. Se via Docker, `DB_HOST=db`.
+
+### 4. Permissões de Arquivo (Linux/Mac)
+
+Se tiver problemas com scripts, tente dar permissão de execução:
+
+```bash
+chmod +x node_modules/.bin/nest
+```
