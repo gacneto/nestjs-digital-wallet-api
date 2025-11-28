@@ -36,7 +36,6 @@ export class ConversionService {
     const { sourceCurrency, targetCurrency, amount, privateKey } =
       createConversionDto;
 
-    // 1. Validate Wallet and Private Key
     const wallet = await this.walletRepository.findOne({
       where: { address: walletAddress },
     });
@@ -50,7 +49,6 @@ export class ConversionService {
       throw new UnauthorizedException('Invalid private key');
     }
 
-    // 2. Check Balance
     const sourceBalance = await this.walletBalanceRepository.findOne({
       where: { walletAddress, currencyCode: sourceCurrency },
     });
@@ -59,7 +57,6 @@ export class ConversionService {
       throw new BadRequestException('Insufficient funds');
     }
 
-    // 3. Get Conversion Rate
     let rate = 0;
     try {
       const response = await firstValueFrom(
@@ -72,26 +69,19 @@ export class ConversionService {
       throw new BadRequestException('Failed to fetch conversion rate');
     }
 
-    // 4. Calculate Amounts
     const feePercentage = parseFloat(
       this.configService.get<string>('TAXA_CONVERSAO_PERCENTUAL') || '0',
     );
-
-    // Logic: Debit source amount. Credit target amount = (source * rate) * (1 - fee)
-    // Wait, the prompt says: "sugestão: debite valor_origem da carteira e credite valor_convertido * (1 - taxa) no destino"
-    // So the fee is deducted from the converted amount.
 
     const rawConvertedAmount = amount * rate;
     const feeAmount = rawConvertedAmount * feePercentage;
     const finalTargetAmount = rawConvertedAmount - feeAmount;
 
-    // 5. Atomic Transaction
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
-      // Debit Source
       await queryRunner.manager.decrement(
         WalletBalance,
         { walletAddress, currencyCode: sourceCurrency },
@@ -99,14 +89,11 @@ export class ConversionService {
         amount,
       );
 
-      // Credit Target
-      // Check if target balance exists (it should if wallet created correctly, but let's be safe)
       let targetBalance = await queryRunner.manager.findOne(WalletBalance, {
         where: { walletAddress, currencyCode: targetCurrency },
       });
 
       if (!targetBalance) {
-        // Should have been created on wallet creation, but handle if missing
         targetBalance = queryRunner.manager.create(WalletBalance, {
           walletAddress,
           currencyCode: targetCurrency,
@@ -122,7 +109,6 @@ export class ConversionService {
         finalTargetAmount,
       );
 
-      // Record Conversion
       const conversion = queryRunner.manager.create(Conversion, {
         walletAddress,
         sourceCurrency,
