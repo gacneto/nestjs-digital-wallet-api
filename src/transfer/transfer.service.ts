@@ -66,7 +66,10 @@ export class TransferService {
     const totalDebit = amount + fee;
 
     const sourceBalance = await this.walletBalanceRepository.findOne({
-      where: { walletAddress: sourceAddress, currencyCode: currency },
+      where: {
+        walletAddress: sourceAddress,
+        currencyCode: currency,
+      },
     });
 
     if (!sourceBalance || Number(sourceBalance.balance) < totalDebit) {
