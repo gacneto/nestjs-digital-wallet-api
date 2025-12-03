@@ -55,7 +55,6 @@ export class TransactionService {
       });
 
       if (!balance) {
-        // Should have been created on wallet creation, but just in case
         balance = queryRunner.manager.create(WalletBalance, {
           walletAddress: address,
           currencyCode,
@@ -63,11 +62,9 @@ export class TransactionService {
         });
       }
 
-      // Update balance
       balance.balance = Number(balance.balance) + Number(amount);
       await queryRunner.manager.save(balance);
 
-      // Create transaction record
       const transaction = queryRunner.manager.create(Transaction, {
         walletAddress: address,
         currencyCode,
@@ -95,8 +92,6 @@ export class TransactionService {
       throw new NotFoundException('Wallet not found');
     }
 
-    // Validate private key
-    // Normalize input: remove whitespace and convert to lowercase (as hashes are usually from lowercase hex)
     const normalizedKey = privateKey.trim().toLowerCase();
     const isKeyValid = await bcrypt.compare(
       normalizedKey,
@@ -134,11 +129,9 @@ export class TransactionService {
         throw new BadRequestException('Insufficient funds');
       }
 
-      // Update balance
       balance.balance = Number(balance.balance) - totalDeduction;
       await queryRunner.manager.save(balance);
 
-      // Create transaction record
       const transaction = queryRunner.manager.create(Transaction, {
         walletAddress: address,
         currencyCode,

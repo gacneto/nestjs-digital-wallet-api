@@ -32,7 +32,6 @@ export class TransferService {
   ): Promise<Transfer> {
     const { targetAddress, currency, amount, privateKey } = createTransferDto;
 
-    // 1. Validate Source Wallet and Private Key
     const sourceWallet = await this.walletRepository.findOne({
       where: { address: sourceAddress },
     });
@@ -49,7 +48,6 @@ export class TransferService {
       throw new UnauthorizedException('Invalid private key');
     }
 
-    // 2. Validate Target Wallet
     const targetWallet = await this.walletRepository.findOne({
       where: { address: targetAddress },
     });
@@ -62,13 +60,11 @@ export class TransferService {
       throw new BadRequestException('Cannot transfer to the same wallet');
     }
 
-    // 3. Calculate Fee and Total Debit
     const fee = parseFloat(
       this.configService.get<string>('TAXA_TRANSFERENCIA') || '0',
     );
     const totalDebit = amount + fee;
 
-    // 4. Check Source Balance
     const sourceBalance = await this.walletBalanceRepository.findOne({
       where: { walletAddress: sourceAddress, currencyCode: currency },
     });
@@ -77,13 +73,11 @@ export class TransferService {
       throw new BadRequestException('Insufficient funds');
     }
 
-    // 5. Atomic Transaction
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
-      // Debit Source
       await queryRunner.manager.decrement(
         WalletBalance,
         { walletAddress: sourceAddress, currencyCode: currency },
@@ -91,8 +85,6 @@ export class TransferService {
         totalDebit,
       );
 
-      // Credit Target
-      // Check if target balance exists
       let targetBalance = await queryRunner.manager.findOne(WalletBalance, {
         where: { walletAddress: targetAddress, currencyCode: currency },
       });
@@ -113,7 +105,6 @@ export class TransferService {
         amount,
       );
 
-      // Record Transfer
       const transfer = queryRunner.manager.create(Transfer, {
         sourceWallet: sourceAddress,
         targetWallet: targetAddress,
